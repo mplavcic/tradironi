@@ -1,0 +1,38 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+  server:
+    port: 8081
+
+spring:
+  application:
+    name: tradironi
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari:
+      pool-name: Tradironi
+      maximum-pool-size: 20
+      minimum-idle: 20
+      connection-timeout: 5000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        default_schema: tradironi_schema
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    schemas: tradironi_schema
+    default-schema: tradironi_schema

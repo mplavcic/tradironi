@@ -22,6 +22,7 @@ out/test/
 *.iws
 *.iml
 *.ipr
+out/
 
 ### NetBeans ###
 /nbproject/private/
@@ -65,9 +66,11 @@ dist-ssr
 .env.*
 !.env.example
 
-.m2/
-.metals/
-
+### Spring Boot ###
+*.pid
+application-local.yml
+application-local.yaml
+application-local.properties
 
 # SonarQube
 .scannerwork/
@@ -75,3 +78,6 @@ dist-ssr
 coverage
 *storybook.log
 storybook-static
+
+# AI agent config
+AGENTS.md
