@@ -1,4 +1,4 @@
-package com.example.tradironi.security;
+package com.example.tradironi.shared.security;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
