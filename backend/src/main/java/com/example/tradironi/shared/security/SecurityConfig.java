@@ -23,10 +23,12 @@ public class SecurityConfig {
 
     public static final String ADMIN = "ADMIN";
 
-    private final UserSyncFilter userSyncFilter;
-    
+    private final UserSyncService userSyncService;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        UserSyncFilter syncFilter = new UserSyncFilter(userSyncService);
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm
@@ -39,13 +41,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter())))
-                .addFilterAfter(userSyncFilter, BearerTokenAuthenticationFilter.class)
+                .addFilterAfter(syncFilter, BearerTokenAuthenticationFilter.class)
                 .build();
-    }
-
-    @Bean
-    public UserSyncFilter userSyncFilter(UserSyncService userSyncService) {
-        return new UserSyncFilter(userSyncService);
     }
 
     @Bean
