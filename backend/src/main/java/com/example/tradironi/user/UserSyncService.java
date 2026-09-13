@@ -1,8 +1,9 @@
 package com.example.tradironi.user;
 
+import com.example.tradironi.user.internal.User;
+import com.example.tradironi.user.internal.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +17,7 @@ public class UserSyncService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void syncIfMissing(Jwt jwt) {
-        UUID keycloakId = UUID.fromString(jwt.getSubject());
+    public void syncUser(UUID keycloakId) {
         if (userRepository.existsByKeycloakId(keycloakId)) {
             return;
         }

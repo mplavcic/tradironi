@@ -1,5 +1,6 @@
-package com.example.tradironi.user;
+package com.example.tradironi.user.internal;
 
+import com.example.tradironi.user.UserStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

@@ -1,4 +1,4 @@
-package com.example.tradironi.user;
+package com.example.tradironi.user.internal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

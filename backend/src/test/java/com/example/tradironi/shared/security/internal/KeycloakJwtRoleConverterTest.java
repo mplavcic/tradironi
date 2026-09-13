@@ -1,4 +1,4 @@
-package com.example.tradironi.shared.security;
+package com.example.tradironi.shared.security.internal;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;

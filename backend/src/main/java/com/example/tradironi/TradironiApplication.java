@@ -1,13 +1,14 @@
 package com.example.tradironi;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.modulith.Modulith;
 
-@SpringBootApplication
+@Modulith(
+		systemName = "Tradironi",
+		sharedModules = {"shared"}
+)
 public class TradironiApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(TradironiApplication.class, args);
 	}
-
 }

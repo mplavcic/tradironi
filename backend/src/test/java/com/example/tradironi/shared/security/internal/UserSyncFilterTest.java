@@ -1,4 +1,4 @@
-package com.example.tradironi.shared.security;
+package com.example.tradironi.shared.security.internal;
 
 import com.example.tradironi.user.UserSyncService;
 import jakarta.servlet.FilterChain;
@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
@@ -56,7 +57,7 @@ class UserSyncFilterTest {
 
         userSyncFilter.doFilterInternal(request, response, filterChain);
 
-        verify(userSyncService).syncIfMissing(dummyJwt());
+        verify(userSyncService).syncUser(UUID.fromString(dummyJwt().getSubject()));
         verify(filterChain).doFilter(request, response);
     }
 
@@ -64,7 +65,7 @@ class UserSyncFilterTest {
     void skipsSyncWhenNoAuthentication() throws Exception {
         userSyncFilter.doFilterInternal(request, response, filterChain);
 
-        verify(userSyncService, never()).syncIfMissing(any());
+        verify(userSyncService, never()).syncUser(any());
         verify(filterChain).doFilter(request, response);
     }
 
@@ -72,10 +73,22 @@ class UserSyncFilterTest {
     void continuesChainWhenSyncThrows() throws Exception {
         SecurityContextHolder.getContext().setAuthentication(
                 new JwtAuthenticationToken(dummyJwt(), List.of(new SimpleGrantedAuthority("ROLE_USER")), "user"));
-        doThrow(new RuntimeException("fail")).when(userSyncService).syncIfMissing(any());
+        doThrow(new RuntimeException("fail")).when(userSyncService).syncUser(any());
 
         userSyncFilter.doFilterInternal(request, response, filterChain);
 
+        verify(filterChain).doFilter(request, response);
+    }
+
+    @Test
+    void continuesChainWhenSubjectIsNotAUuid() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(
+                new JwtAuthenticationToken(Jwt.withTokenValue("token").header("alg", "HS256").claim("sub", "not-a-uuid").build(),
+                        List.of(new SimpleGrantedAuthority("ROLE_USER")), "user"));
+
+        userSyncFilter.doFilterInternal(request, response, filterChain);
+
+        verify(userSyncService, never()).syncUser(any());
         verify(filterChain).doFilter(request, response);
     }
 }

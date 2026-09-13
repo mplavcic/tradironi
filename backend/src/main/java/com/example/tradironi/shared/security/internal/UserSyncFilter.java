@@ -1,4 +1,4 @@
-package com.example.tradironi.shared.security;
+package com.example.tradironi.shared.security.internal;
 
 import com.example.tradironi.user.UserSyncService;
 import jakarta.servlet.FilterChain;
@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class UserSyncFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         if (SecurityContextHolder.getContext().getAuthentication() instanceof JwtAuthenticationToken jwtAuth) {
             try {
-                userSyncService.syncIfMissing(jwtAuth.getToken());
+                userSyncService.syncUser(UUID.fromString(jwtAuth.getToken().getSubject()));
             } catch (Exception e) {
                 log.warn("Failed to sync user from JWT: {}", e.getMessage());
             }
